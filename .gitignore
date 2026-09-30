@@ -1,0 +1,17 @@
+node_modules/
+dist/
+ops/data/
+ops/.env
+contracts/out/
+contracts/cache/
+contracts/broadcast/*/31337/
+contracts/broadcast/**/dry-run/
+contracts/deployments/local-fork.json
+contracts/lib/
+web/public/deployment.json
+*.log
+.env
+external/node_modules/
+keys/
+.claude-flow/
+**/.claude-flow/
