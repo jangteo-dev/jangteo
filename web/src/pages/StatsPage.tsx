@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useChain } from "../app";
 import { dateKst, useLang } from "../i18n";
 
-type Stall = "swap" | "pump" | "insa" | "bridge" | "cheongyak" | "jangoe" | "sangjang" | "gye" | "yut" | "daily" | "invite";
+type Stall = "swap" | "pump" | "insa" | "bridge" | "cheongyak" | "jangoe" | "property" | "stocks" | "sangjang" | "gye" | "yut" | "daily" | "invite";
 interface StatsFile {
   updatedAt: number;
   since: number;
@@ -24,7 +24,7 @@ async function loadStats(): Promise<StatsFile | null> {
 
 const n0 = (n: number) => Math.round(n).toLocaleString("en-US");
 const eth = (n: number) => (n >= 100 ? n0(n) : n.toLocaleString("en-US", { maximumFractionDigits: 3 }));
-const STALLS: Stall[] = ["swap", "pump", "insa", "bridge", "cheongyak", "jangoe", "sangjang", "gye", "yut", "daily", "invite"];
+const STALLS: Stall[] = ["swap", "pump", "insa", "bridge", "cheongyak", "jangoe", "property", "stocks", "sangjang", "gye", "yut", "daily", "invite"];
 type Metric = "tx" | "users" | "eth";
 
 export function StatsPage() {

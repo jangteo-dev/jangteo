@@ -67,10 +67,17 @@ export const RULES = {
   inviteShare: 0.1, // the inviter earns 10% of each invited friend's season points (the friend keeps all of theirs)
   inviteCap: 5000, // most one inviter can earn from invites in a season
   inviteWelcome: 50, // once, to the invited friend, when they have earned anything
+  // 장터 부동산
+  prPerKrw: 1 / 1000, // 1 P per ₩1,000 of shares bought (sale or market); the market seller earns the same
+  prRentClaim: 20, // claiming rent, once per KST day
+  // 장터 주식
+  stPerKrw: 1 / 1000, // 1 P per ₩1,000 of stocks bought or sold
+  stDailyCap: 500,
+  stLpPerKrwDay: 1 / 1000, // 1 P per ₩1,000 in the stocks vault, per day
 };
 
-export type Part = "swap" | "lp" | "bridge" | "cheongyak" | "jangoe" | "pump" | "insa" | "yut" | "gye" | "sangjang" | "daily" | "days" | "invite";
-export const PARTS: Part[] = ["swap", "lp", "bridge", "cheongyak", "jangoe", "pump", "insa", "yut", "gye", "sangjang", "daily", "days", "invite"];
+export type Part = "swap" | "lp" | "bridge" | "cheongyak" | "jangoe" | "property" | "stocks" | "pump" | "insa" | "yut" | "gye" | "sangjang" | "daily" | "days" | "invite";
+export const PARTS: Part[] = ["swap", "lp", "bridge", "cheongyak", "jangoe", "property", "stocks", "pump", "insa", "yut", "gye", "sangjang", "daily", "days", "invite"];
 export type Quest = "swap" | "curve" | "yut" | "bridge" | "insa";
 
 /** Today's roulette and quests for one wallet, for the Points page. */
@@ -96,7 +103,7 @@ export interface Entry {
   rank: number | null;
 }
 
-export type Stall = "swap" | "pump" | "insa" | "bridge" | "cheongyak" | "jangoe" | "sangjang" | "gye" | "yut" | "daily" | "invite";
+export type Stall = "swap" | "pump" | "insa" | "bridge" | "cheongyak" | "jangoe" | "property" | "stocks" | "sangjang" | "gye" | "yut" | "daily" | "invite";
 export interface StallStats {
   tx: number;
   users: number;
@@ -184,6 +191,14 @@ const EV = {
   aggSwapped: parseAbiItem("event Swapped(address indexed sender, address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut, uint256 fee)"),
   bridged: parseAbiItem("event Deposited(address indexed from, address indexed to, uint256 amount, uint256 fee)"),
   invited: parseAbiItem("event Invited(address indexed invitee, address indexed referrer)"),
+  prBought: parseAbiItem("event Bought(uint256 indexed id, address indexed buyer, uint256 shares, uint256 paid)"),
+  prFilled: parseAbiItem("event ListingFilled(uint256 indexed listing, uint256 indexed id, address indexed buyer, uint256 shares, uint256 paid, uint256 fee)"),
+  prListed: parseAbiItem("event Listed(uint256 indexed listing, uint256 indexed id, address indexed seller, uint256 shares, uint256 price)"),
+  prRent: parseAbiItem("event RentClaimed(uint256 indexed id, address indexed holder, uint256 amount)"),
+  stBought: parseAbiItem("event Bought(bytes32 indexed sym, address indexed buyer, uint256 krwIn, uint256 shares, uint256 price, uint256 fee)"),
+  stSold: parseAbiItem("event Sold(bytes32 indexed sym, address indexed seller, uint256 shares, uint256 krwOut, uint256 price, uint256 fee)"),
+  stDeposited: parseAbiItem("event Deposited(address indexed lp, uint256 krw, uint256 minted, uint256 nav)"),
+  stWithdrawn: parseAbiItem("event Withdrawn(address indexed lp, uint256 burned, uint256 krw, uint256 fee, uint256 nav)"),
   exited: parseAbiItem("event Exit(uint256 indexed id, address indexed from, address indexed to, uint256 amount, uint256 amountOut, uint256 fee)"),
 };
 const dailyAbi = parseAbi(["function rewardFor(bytes32 nextBlockHash, address who, uint256 day) pure returns (uint256)"]);
@@ -210,6 +225,9 @@ export async function computePoints(): Promise<PointsFile | null> {
   const stalls = deployment<{ cheongyak: Address; yut: Address; yutV1?: Address }>("91342.stalls.json");
   const launch = deployment<{ cheongyakV2: Address; swapFactory: Address }>("91342.launchpad.json");
   const jangoe = deployment<{ jangoe: Address }>("91342.jangoe.json");
+  // Only the live registry counts; the 10-minute-rent e2e registry is a test fixture.
+  const prop = deployment<{ property: Address }>("91342.property.json");
+  const stx = deployment<{ stocks: Address }>("91342.stocks.json");
   // 뻥튀기 v1 and v2: both count.
   const pumps = ["91342.pump.json", "91342.pump2.json"].map((f) => deployment<{ pump: Address; pumpRouter: Address }>(f)).filter((x): x is { pump: Address; pumpRouter: Address } => !!x);
   const pump = pumps[0] ?? null;
@@ -253,7 +271,7 @@ export async function computePoints(): Promise<PointsFile | null> {
   const capped = new Map<string, number>(); // key: addr|part|day → used
   const add = (who: Address, part: Part, v: number, bn?: bigint, cap?: number, capKey: string = part) => {
     const k = who.toLowerCase();
-    if (!pts.has(k)) pts.set(k, { swap: 0, lp: 0, bridge: 0, cheongyak: 0, jangoe: 0, pump: 0, insa: 0, yut: 0, gye: 0, sangjang: 0, daily: 0, days: 0, invite: 0 });
+    if (!pts.has(k)) pts.set(k, { swap: 0, lp: 0, bridge: 0, cheongyak: 0, jangoe: 0, property: 0, stocks: 0, pump: 0, insa: 0, yut: 0, gye: 0, sangjang: 0, daily: 0, days: 0, invite: 0 });
     let amount = v;
     if (bn !== undefined) {
       const d = kstDay(timeOf(bn));
@@ -376,6 +394,83 @@ export async function computePoints(): Promise<PointsFile | null> {
     }
     for (const l of delivered.filter((x) => inSeason(x.blockNumber))) add(l.args.seller, "jangoe", RULES.jgDelivered, l.blockNumber);
     for (const l of defaulted.filter((x) => inSeason(x.blockNumber))) add(l.args.seller, "jangoe", RULES.jgDefaulted, l.blockNumber);
+  }
+
+  // ── 장터 부동산: shares bought in the sale or on the market (both market sides), rent claims ──
+  if (prop) {
+    const [bought, filled, listed, rent] = await Promise.all([
+      scan([prop.property], EV.prBought, startBlock, head.number),
+      scan([prop.property], EV.prFilled, startBlock, head.number),
+      scan([prop.property], EV.prListed, startBlock, head.number),
+      scan([prop.property], EV.prRent, startBlock, head.number),
+    ]);
+    const sellerOf = new Map(listed.map((l) => [l.args.listing.toString(), l.args.seller]));
+    for (const l of bought.filter((x) => inSeason(x.blockNumber))) {
+      const v = won(l.args.paid);
+      add(l.args.buyer, "property", v * RULES.prPerKrw, l.blockNumber);
+      act("property", l.args.buyer, l.transactionHash, l.blockNumber, 0, v);
+    }
+    for (const l of filled.filter((x) => inSeason(x.blockNumber))) {
+      const v = won(l.args.paid);
+      add(l.args.buyer, "property", v * RULES.prPerKrw, l.blockNumber);
+      act("property", l.args.buyer, l.transactionHash, l.blockNumber, 0, v);
+      const seller = sellerOf.get(l.args.listing.toString());
+      if (seller) {
+        add(seller, "property", v * RULES.prPerKrw, l.blockNumber);
+        act("property", seller, l.transactionHash, l.blockNumber);
+      }
+    }
+    for (const l of rent.filter((x) => inSeason(x.blockNumber))) {
+      add(l.args.holder, "property", RULES.prRentClaim, l.blockNumber, RULES.prRentClaim, "prRent");
+      act("property", l.args.holder, l.transactionHash, l.blockNumber);
+    }
+  }
+
+  // ── 장터 주식: trades (daily cap) and time in the vault ──
+  if (stx) {
+    const [bought, sold, dep, wd] = await Promise.all([
+      scan([stx.stocks], EV.stBought, startBlock, head.number),
+      scan([stx.stocks], EV.stSold, startBlock, head.number),
+      scan([stx.stocks], EV.stDeposited, startBlock, head.number),
+      scan([stx.stocks], EV.stWithdrawn, startBlock, head.number),
+    ]);
+    for (const l of bought.filter((x) => inSeason(x.blockNumber))) {
+      const v = won(l.args.krwIn);
+      add(l.args.buyer, "stocks", v * RULES.stPerKrw, l.blockNumber, RULES.stDailyCap, "stTrade");
+      act("stocks", l.args.buyer, l.transactionHash, l.blockNumber, 0, v);
+    }
+    for (const l of sold.filter((x) => inSeason(x.blockNumber))) {
+      const v = won(l.args.krwOut);
+      add(l.args.seller, "stocks", v * RULES.stPerKrw, l.blockNumber, RULES.stDailyCap, "stTrade");
+      act("stocks", l.args.seller, l.transactionHash, l.blockNumber, 0, v);
+    }
+    // Vault time: the won each wallet put in, held from deposit until withdrawn (pro rata by LP burned).
+    const moves = [
+      ...dep.map((l) => ({ who: l.args.lp, bn: l.blockNumber, li: l.logIndex, krw: won(l.args.krw), lp: l.args.minted, tx: l.transactionHash, out: false })),
+      ...wd.map((l) => ({ who: l.args.lp, bn: l.blockNumber, li: l.logIndex, krw: 0, lp: l.args.burned, tx: l.transactionHash, out: true })),
+    ].sort((a, b) => Number(a.bn - b.bn) || a.li - b.li);
+    const pos = new Map<string, { basis: number; lp: bigint; since: number }>();
+    const accrue = (who: Address, p: { basis: number; since: number }, until: number, bn: bigint) => {
+      const from = Math.max(p.since, SEASON.startsAt);
+      if (until > from && p.basis > 0) add(who, "stocks", (p.basis * RULES.stLpPerKrwDay * (until - from)) / DAY, bn);
+    };
+    for (const m of moves) {
+      const k = m.who.toLowerCase();
+      const p = pos.get(k) ?? { basis: 0, lp: 0n, since: timeOf(m.bn) };
+      accrue(m.who, p, Math.min(timeOf(m.bn), now), m.bn);
+      p.since = timeOf(m.bn);
+      if (m.out) {
+        const share = p.lp === 0n ? 1 : Math.min(1, Number(m.lp) / Number(p.lp));
+        p.basis -= p.basis * share;
+        p.lp = p.lp > m.lp ? p.lp - m.lp : 0n;
+      } else {
+        p.basis += m.krw;
+        p.lp += m.lp;
+        act("stocks", m.who, m.tx, m.bn, 0, m.krw);
+      }
+      pos.set(k, p);
+    }
+    for (const [k, p] of pos) accrue(k as Address, p, now, head.number);
   }
 
   // ── 뻥튀기: curve trades (router trades credit the recipient), graduation bonus to the creator ──
@@ -638,7 +733,7 @@ export async function computePoints(): Promise<PointsFile | null> {
   // ── stats ──
   const isTeam = (a: string) => team.has(a) || ours.has(a);
   const verifiedSet = new Set(addrs.filter((_, i) => verified[i]).map((a) => a.toLowerCase()));
-  const STALLS: Stall[] = ["swap", "pump", "insa", "bridge", "cheongyak", "jangoe", "sangjang", "gye", "yut", "daily", "invite"];
+  const STALLS: Stall[] = ["swap", "pump", "insa", "bridge", "cheongyak", "jangoe", "property", "stocks", "sangjang", "gye", "yut", "daily", "invite"];
   const stallStats = Object.fromEntries(STALLS.map((k) => [k, { tx: 0, users: 0, eth: 0, krw: 0 }])) as Record<Stall, StallStats>;
   const txAll = new Set<string>();
   const txCommunity = new Set<string>();

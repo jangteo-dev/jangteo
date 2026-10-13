@@ -95,6 +95,11 @@ export interface Deployment {
   insaFactory?: Address;
   insaMarket?: Address;
   tal?: Address;
+  /** 장터 부동산 (JangteoProperty). */
+  property?: Address;
+  /** 장터 주식: exchange + LP vault (JSLP), and its price oracle. */
+  stocks?: Address;
+  stockOracle?: Address;
   yut?: Address;
   yutHouse?: Address;
   implementation?: Address;

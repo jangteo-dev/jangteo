@@ -172,6 +172,59 @@ export const faqEn: FaqDict = {
       ],
     },
     {
+      h: "Stocks",
+      items: [
+        {
+          q: "What are Jangteo Stocks?",
+          a: [
+            "Eight Korean and eight US stocks you can buy and sell in won at the exchange's live price, while that market is open. Prices come from the exchange through Naver Finance, cross-checked with Yahoo Finance, and are written on-chain every 15–30 seconds.",
+            "On the testnet these are simulated: you hold j-tokens priced like the real shares, bought with test won.",
+          ],
+        },
+        {
+          q: "When can I trade?",
+          a: [
+            "Korean stocks follow KRX and Nextrade, roughly 08:00–20:00 KST on Korean trading days. US stocks follow the regular New York session, 22:30–05:00 KST in summer and 23:30–06:00 in winter. Holidays close them too.",
+            "Outside those hours, or when the last price is over 90 seconds old, buying and selling pause.",
+          ],
+        },
+        {
+          q: "How does the vault work, and what do LPs earn?",
+          a: [
+            "The vault is on the other side of every trade, so there is no order book and no slippage. Each trade pays 0.3%: 80% stays in the vault for LPs, 20% goes to Jangteo. Anyone can add test won and receive JSLP, locked for 24 hours.",
+            "LPs earn the fees and take the other side of traders: if traders' stocks rise, the vault pays them. One stock can use at most 25% of the vault and all stocks 75%, so the vault can always pay everyone who sells.",
+          ],
+        },
+      ],
+    },
+    {
+      h: "Property",
+      items: [
+        {
+          q: "What is Jangteo Property?",
+          a: [
+            "Shares of a home or a plot of land. You buy shares at a fixed price, the rent is paid to every holder each month, you can sell shares to another verified wallet on the market, and when the property is sold every share is paid its part.",
+            "On the testnet every property is a simulated asset bought with test won: no real buildings, tenants or land.",
+          ],
+        },
+        {
+          q: "What if a sale doesn't fill?",
+          a: ["Each property has a minimum. If fewer shares than that sell by the deadline, the sale fails and every buyer takes back exactly what they paid. The issuer or Jangteo can also cancel a sale that is still open, with the same full refund."],
+        },
+        {
+          q: "Where does the rent come from, and what if it's late?",
+          a: [
+            "When a sale closes, a few months of rent are kept back from the issuer's proceeds as a reserve. Each month the rent is paid from it to all holders by their share; anyone can trigger it and Jangteo does it automatically.",
+            "If the reserve runs out, the missing rent is shown as late, and it is the first thing paid when the issuer tops the reserve up. Shares listed on the market earn no rent while they are listed.",
+          ],
+        },
+        {
+          q: "Who can list a property?",
+          a: ["Jangteo lists curated properties, marked Verified by Jangteo. Any Dojang-verified wallet can list its own too; those are marked Not verified by Jangteo, because nobody has checked the photos or the details."],
+        },
+      ],
+    },
+    {
       h: "Safety",
       items: [
         {
@@ -341,6 +394,59 @@ export const faqKo: FaqDict = {
         {
           q: "룰렛을 조작할 수 있나요?",
           a: ["결과는 돌린 다음 블록의 해시로 정해져요. 돌릴 때는 아무도 그 해시를 모르고, 하루에 한 번뿐이라 다시 돌릴 수도 없어요."],
+        },
+      ],
+    },
+    {
+      h: "주식",
+      items: [
+        {
+          q: "장터 주식은 무엇인가요?",
+          a: [
+            "국내 주식 8종목과 미국 주식 8종목을, 시장이 열려 있을 때 거래소 실시간 가격에 원화로 사고팔 수 있어요. 가격은 네이버 증권을 통해 거래소에서 가져와 야후 파이낸스와 대조하고, 15~30초마다 체인에 기록돼요.",
+            "테스트넷에서는 모의 자산이에요. 실제 주식 가격을 따라가는 j토큰을 테스트 원화로 사요.",
+          ],
+        },
+        {
+          q: "언제 거래할 수 있나요?",
+          a: [
+            "국내 주식은 KRX와 넥스트레이드를 따라 국내 거래일 약 08:00~20:00에 거래돼요. 미국 주식은 뉴욕 정규장을 따라 서머타임에는 22:30~05:00, 그 외에는 23:30~06:00이에요. 휴장일에는 쉬어요.",
+            "그 밖의 시간이나 마지막 가격이 90초보다 오래되면 매수와 매도가 잠시 멈춰요.",
+          ],
+        },
+        {
+          q: "금고는 어떻게 움직이고, 유동성 공급자는 무엇을 받나요?",
+          a: [
+            "금고가 모든 거래의 상대방이라 호가창도 슬리피지도 없어요. 거래마다 0.3%를 내고, 80%는 유동성 공급자를 위해 금고에 남고 20%는 장터에게 가요. 누구나 테스트 원화를 넣고 JSLP를 받을 수 있고, 24시간 동안 잠겨요.",
+            "유동성 공급자는 수수료를 받는 대신 트레이더의 상대방이 돼요. 트레이더의 주식이 오르면 금고가 지급해요. 한 종목은 금고의 25%, 전체 종목은 75%까지만 쓸 수 있어서, 금고는 언제나 파는 사람 모두에게 지급할 수 있어요.",
+          ],
+        },
+      ],
+    },
+    {
+      h: "부동산",
+      items: [
+        {
+          q: "장터 부동산은 무엇인가요?",
+          a: [
+            "집이나 땅의 지분이에요. 정해진 가격에 지분을 사면 매달 임대료가 모든 보유자에게 지급되고, 마켓에서 다른 인증 지갑에게 지분을 팔 수 있고, 부동산이 팔리면 모든 지분이 자기 몫을 받아요.",
+            "테스트넷의 부동산은 모두 테스트 원화로 사는 모의 자산이에요. 실제 건물, 세입자, 땅은 없어요.",
+          ],
+        },
+        {
+          q: "모집이 다 안 차면 어떻게 되나요?",
+          a: ["부동산마다 최소 모집 수가 있어요. 마감까지 그만큼 팔리지 않으면 모집은 실패하고, 모든 구매자가 낸 금액을 그대로 돌려받아요. 진행 중인 모집은 등록자나 장터가 취소할 수도 있고, 이때도 전액 환불돼요."],
+        },
+        {
+          q: "임대료는 어디서 나오고, 밀리면 어떻게 되나요?",
+          a: [
+            "모집이 마감되면 등록자가 받을 금액에서 몇 달치 임대료를 적립금으로 남겨 둬요. 매달 이 적립금에서 모든 보유자에게 지분만큼 임대료가 지급돼요. 누구나 지급을 실행할 수 있고, 장터가 자동으로 실행해요.",
+            "적립금이 바닥나면 못 받은 임대료는 연체로 표시되고, 등록자가 적립금을 채우면 가장 먼저 지급돼요. 마켓에 판매 등록한 지분은 등록된 동안 임대료를 받지 않아요.",
+          ],
+        },
+        {
+          q: "누가 부동산을 등록할 수 있나요?",
+          a: ["장터가 고른 부동산은 '장터 인증'으로 표시돼요. Dojang 인증을 받은 지갑이라면 누구나 직접 등록할 수 있고, 이런 부동산은 사진과 내용을 아무도 확인하지 않았기 때문에 '장터 미인증'으로 표시돼요."],
         },
       ],
     },

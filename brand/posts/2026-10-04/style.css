@@ -1,0 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Hahmlet:wght@300;400;500;700&display=swap");
+:root { --paper:#e9ecea; --paper-hi:#f5f6f3; --paper-lo:#dde1de; --ink:#1d2230; --ink-2:#4a5163; --ink-3:#737a8a; --seam:rgb(29 34 48 / .14); --jjok:#2f4a9a; --hong:#b3243a; --hwang:#d9a021; --nok:#3e7f6b; }
+* { box-sizing: border-box; margin: 0; }
+body { width: 1600px; height: 900px; background: var(--paper); color: var(--ink); font-family: "Gowun Dodum", sans-serif; overflow: hidden; }
+.card { position: relative; width: 1600px; height: 900px; padding: 72px 88px; display: flex; flex-direction: column;
+  background: radial-gradient(90% 120% at 100% 0%, color-mix(in srgb, var(--hwang) 20%, transparent), transparent 60%), radial-gradient(70% 90% at 0% 100%, color-mix(in srgb, var(--jjok) 10%, transparent), transparent 60%), var(--paper); }
+.top { display: flex; justify-content: space-between; align-items: center; }
+.top img { height: 64px; }
+.tag { font-size: 24px; color: var(--hong); display: flex; gap: 12px; align-items: center; }
+.tag i { width: 14px; height: 14px; border-radius: 50%; background: var(--hong); box-shadow: 0 0 0 6px color-mix(in srgb, var(--hong) 18%, transparent); }
+h1 { font-family: "Hahmlet", serif; font-weight: 500; letter-spacing: -0.01em; }
+.foot { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; color: var(--ink-3); font-size: 22px; }
+.foot b { color: var(--ink); font-weight: 400; font-size: 26px; }

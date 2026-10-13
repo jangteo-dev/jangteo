@@ -39,6 +39,12 @@ const InsaHome = lazy(() => import("./pages/InsaHome").then((m) => ({ default: m
 const InsaCollection = lazy(() => import("./pages/InsaCollection").then((m) => ({ default: m.InsaCollection })));
 const InsaItem = lazy(() => import("./pages/InsaItem").then((m) => ({ default: m.InsaItem })));
 const InsaNew = lazy(() => import("./pages/InsaNew").then((m) => ({ default: m.InsaNew })));
+const PropList = lazy(() => import("./pages/PropList").then((m) => ({ default: m.PropList })));
+const PropPage = lazy(() => import("./pages/PropPage").then((m) => ({ default: m.PropPage })));
+const PropNew = lazy(() => import("./pages/PropNew").then((m) => ({ default: m.PropNew })));
+const StockBoard = lazy(() => import("./pages/StockBoard").then((m) => ({ default: m.StockBoard })));
+const StockPage = lazy(() => import("./pages/StockPage").then((m) => ({ default: m.StockPage })));
+const StockPool = lazy(() => import("./pages/StockPool").then((m) => ({ default: m.StockPool })));
 const YutPage = lazy(() => import("./pages/YutPage").then((m) => ({ default: m.YutPage })));
 
 function Page({ route }: { route: string }) {
@@ -56,6 +62,11 @@ function Page({ route }: { route: string }) {
   if (pumpToken) return <PumpPage token={pumpToken} />;
   const jgMarket = route.match(/^\/jangoe\/(\d+)$/)?.[1];
   if (jgMarket !== undefined) return <JgPage id={Number(jgMarket)} />;
+  if (route === "/stocks/pool") return <StockPool />;
+  const stock = route.match(/^\/stocks\/([A-Za-z0-9.]{1,12})$/)?.[1];
+  if (stock !== undefined) return <StockPage sym={stock} />;
+  const prop = route.match(/^\/property\/(\d+)$/)?.[1];
+  if (prop !== undefined) return <PropPage id={Number(prop)} />;
   const insaItem = route.match(/^\/insa\/c\/(0x[0-9a-fA-F]{40})\/(\d+)$/);
   if (insaItem) return <InsaItem address={insaItem[1] as Address} id={insaItem[2]} />;
   const insaCol = route.match(/^\/insa\/c\/(0x[0-9a-fA-F]{40})$/)?.[1] as Address | undefined;
@@ -96,6 +107,12 @@ function Page({ route }: { route: string }) {
       return <StatsPage />;
     case "/jangoe":
       return <JgList />;
+    case "/property":
+      return <PropList />;
+    case "/stocks":
+      return <StockBoard />;
+    case "/property/new":
+      return <PropNew />;
     case "/me":
       return <MePage />;
     case "/me?tab=id":

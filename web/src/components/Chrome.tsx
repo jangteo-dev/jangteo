@@ -79,6 +79,8 @@ export function Header({ route }: { route: string }) {
     { href: "#/cheongyak", label: n.offerings, ko: "청약", desc: n.dOfferings, active: at("/cheongyak") },
     { href: "#/gye", label: n.circles, ko: "계모임", desc: n.dCircles, active: at("/gye") },
     { href: "#/listings", label: n.listings, ko: "상장 예측", desc: n.dListings, active: at("/listings") },
+    { href: "#/stocks", label: n.stocks, ko: "주식", desc: n.dStocks, active: at("/stocks") },
+    { href: "#/property", label: n.property, ko: "부동산", desc: n.dProperty, active: at("/property") },
     { href: "#/jangoe", label: n.premarket, ko: "장외", desc: n.dPremarket, active: at("/jangoe") },
     { href: "#/yut", label: n.yut, ko: "윷놀이", desc: n.dYut, active: at("/yut") },
     { href: "#/stats", label: t.st.h1, ko: "통계", desc: t.st.desc, active: route === "/stats" },

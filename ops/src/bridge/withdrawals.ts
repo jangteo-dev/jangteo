@@ -5,6 +5,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { giwaSepolia, sepolia } from "viem/chains";
 import { getWithdrawals, publicActionsL1, publicActionsL2, walletActionsL1 } from "viem/op-stack";
 import { config } from "../config.ts";
+import { patient } from "../chain.ts";
 import { PAGE, scanStart } from "../engine/rescan.ts";
 import type { Store } from "../engine/db.ts";
 import type { Task, TaskResult } from "../engine/scheduler.ts";
@@ -69,7 +70,7 @@ export const fastFloat = (l1Balance: bigint) => (l1Balance > FAST_RESERVE ? l1Ba
 
 export function withdrawRelayTask(keeper: { address: Address; key: Hex }, store: Store): Task {
   const l1 = createPublicClient({ chain: sepolia, transport: fallback(config.rpc.l1.map((u) => http(u, { timeout: 20_000 }))) }).extend(publicActionsL1());
-  const l2 = createPublicClient({ chain: giwaSepolia, transport: fallback(config.rpc.giwa.map((u) => http(u, { timeout: 20_000 }))) }).extend(publicActionsL2());
+  const l2 = createPublicClient({ chain: giwaSepolia, transport: patient(fallback(config.rpc.giwa.map((u) => http(u, { timeout: 20_000 })))) }).extend(publicActionsL2());
   const wallet = createWalletClient({
     account: privateKeyToAccount(keeper.key),
     chain: sepolia,

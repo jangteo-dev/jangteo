@@ -12,6 +12,9 @@ import { curateTask, resolveTask } from "./sangjang/tasks.ts";
 import { feeSweepTask } from "./revenue/fees.ts";
 import { cheongyakTask, yutTimeoutTask } from "./stalls.ts";
 import { jangoeCuratorTask, jangoeSettleTask } from "./jangoe.ts";
+import { propertyKeeperTask, propertyVerifyTask } from "./property.ts";
+import { stocksIndexTask, stocksOracleTask, stocksSeedTask, stocksVerifyTask } from "./stocks/tasks.ts";
+import { teamWallet } from "./stocks/wallets.ts";
 import { withdrawRelayTask } from "./bridge/withdrawals.ts";
 import { fastFillTask } from "./bridge/fastfill.ts";
 import { extraRevenueTask } from "./revenue/extra.ts";
@@ -71,6 +74,16 @@ export function buildScheduler(store: Store, hub: Hub) {
     // 장외 premarket
     sched.register(jangoeCuratorTask(deployer));
     sched.register(jangoeSettleTask(deployer));
+    // 장터 부동산: the live registry, and the 10-minute-rent registry the e2e runs against
+    sched.register(propertyKeeperTask(deployer));
+    sched.register(propertyKeeperTask(deployer, "property-e2e"));
+    sched.register(propertyVerifyTask(store));
+    // 장터 주식: prices from a key of its own, the board, and protocol-owned vault liquidity
+    const reporter = teamWallet("STOCKS_REPORTER");
+    if (reporter) sched.register(stocksOracleTask(reporter, store));
+    sched.register(stocksIndexTask(store));
+    sched.register(stocksVerifyTask(store));
+    sched.register(stocksSeedTask(["FARM1", "TRADER1", "TRADER2", "TRADER3"].map(teamWallet).filter((w) => w !== null)));
     const house = farm.find((f) => f.label === (process.env.YUT_BOT_WALLET ?? "FARM2"));
     if (house) sched.register(yutBotTask(house, store));
     // revenue

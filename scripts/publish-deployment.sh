@@ -21,7 +21,9 @@ jq -s '.[0]
   + (if .[13] then {insaFactory: .[13].insaFactory, insaMarket: .[13].insaMarket} else {} end)
   + (if .[14] then {tal: .[14].tal} else {} end)
   + (if .[15] then {pump: .[15].pump, pumpRouter: .[15].pumpRouter, pumpV1: .[5].pump, pumpRouterV1: .[5].pumpRouter} else {} end)
-  + (if .[16] then {invite: .[16].invite} else {} end)' \
+  + (if .[16] then {invite: .[16].invite} else {} end)
+  + (if .[17] then {property: .[17].property} else {} end)
+  + (if .[18] then {stocks: .[18].stocks, stockOracle: .[18].stockOracle} else {} end)' \
   91342.json <(cat 91342.sangjang.json 2>/dev/null || echo null) <(cat 91342.stalls.json 2>/dev/null || echo null) \
   <(cat 91342.launchpad.json 2>/dev/null || echo null) <(cat 91342.jangoe.json 2>/dev/null || echo null) \
   <(cat 91342.pump.json 2>/dev/null || echo null) <(cat 11155111.bridge.json 2>/dev/null || echo null) \
@@ -29,7 +31,9 @@ jq -s '.[0]
   <(cat 91342.fastexit.json 2>/dev/null || echo null) <(cat 11155111.fastvault.json 2>/dev/null || echo null) \
   <(cat 91342.daily.json 2>/dev/null || echo null) <(cat 91342.orders.json 2>/dev/null || echo null) \
   <(cat 91342.insa.json 2>/dev/null || echo null) <(cat 91342.tal.json 2>/dev/null || echo null) \
-  <(cat 91342.pump2.json 2>/dev/null || echo null) <(cat 91342.invite.json 2>/dev/null || echo null) > "$OUT"
+  <(cat 91342.pump2.json 2>/dev/null || echo null) <(cat 91342.invite.json 2>/dev/null || echo null) \
+  <(cat 91342.property.json 2>/dev/null || echo null) \
+  <(cat 91342.stocks.json 2>/dev/null || echo null) > "$OUT"
 # The 윷 house player (ops `yut:bot`) is shown by name in the UI.
 HOUSE=$(grep -s '^GIWA_FARM2_ADDRESS=' "$SECRETS/wallets.env" | cut -d= -f2 || true)
 if [[ -n "$HOUSE" ]]; then tmp=$(mktemp); jq --arg h "$HOUSE" '. + {yutHouse: $h}' "$OUT" > "$tmp" && mv "$tmp" "$OUT"; fi

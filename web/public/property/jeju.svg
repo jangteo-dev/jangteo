@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Farmland on Jeju with Hallasan behind (illustration)">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fb6d9"/><stop offset="1" stop-color="#e3eef2"/></linearGradient></defs>
+  <rect width="800" height="600" fill="url(#sky)"/>
+  <g fill="#fff" opacity="0.85"><ellipse cx="160" cy="110" rx="70" ry="18"/><ellipse cx="560" cy="80" rx="90" ry="20"/></g>
+  <path d="M40 330 Q260 150 400 140 Q540 150 760 330Z" fill="#5f7d8c"/>
+  <path d="M330 175 Q400 130 470 175 Q440 160 400 158 Q360 160 330 175Z" fill="#e9ecea"/>
+  <path d="M0 330 L800 330 L800 600 L0 600Z" fill="#a9c27a"/>
+  <path d="M0 330 L800 330 L800 420 Q400 380 0 430Z" fill="#c4d58f"/>
+  <path d="M0 470 Q300 430 800 460 L800 600 L0 600Z" fill="#d9a021" opacity="0.85"/>
+  <path d="M0 520 Q350 490 800 515 L800 600 L0 600Z" fill="#e8b93c"/>
+  <g fill="#3a3a40" stroke="#1d2230" stroke-width="1.5">
+    <path d="M0 455 q20 -12 40 0 q20 -14 40 0 q20 -10 40 0 q20 -14 40 0 q20 -12 40 0 q20 -14 40 0 q20 -12 40 0 q20 -14 40 0 q20 -12 40 0 q20 -14 40 0 q20 -12 40 0 q20 -14 40 0 q20 -12 40 0 q20 -14 40 0 q20 -12 40 0 q20 -14 40 0 q20 -12 40 0 q20 -14 40 0 q20 -12 40 0 q20 -14 40 0 v12 h-800z"/>
+  </g>
+  <g fill="#e8eadf" stroke="#1d2230" stroke-width="2">
+    <rect x="560" y="360" width="90" height="46"/>
+    <path d="M552 362 Q605 330 658 362Z" fill="#b3243a"/>
+  </g>
+  <g stroke="#2f4a9a" stroke-width="3" fill="none" stroke-dasharray="10 8"><path d="M120 400 L460 380 L500 440 L90 470Z"/></g>
+  <g fill="#3e7f6b"><circle cx="700" cy="350" r="20"/><circle cx="725" cy="356" r="16"/><circle cx="60" cy="352" r="18"/></g>
+</svg>

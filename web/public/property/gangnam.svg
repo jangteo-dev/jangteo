@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Apartment towers in Gangnam (illustration)">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2c97a"/><stop offset="0.55" stop-color="#e9a07a"/><stop offset="1" stop-color="#b8869a"/></linearGradient>
+    <linearGradient id="tw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e9ecea"/><stop offset="1" stop-color="#c9cfd3"/></linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#sky)"/>
+  <circle cx="610" cy="150" r="54" fill="#f7e2a8" opacity="0.9"/>
+  <path d="M0 420 L90 330 L170 380 L260 300 L360 370 L470 290 L560 360 L660 300 L800 380 L800 600 L0 600Z" fill="#8a7a96" opacity="0.55"/>
+  <g fill="#6d6684" opacity="0.8">
+    <rect x="30" y="300" width="60" height="300"/><rect x="700" y="280" width="70" height="320"/><rect x="600" y="340" width="50" height="260"/>
+  </g>
+  <g>
+    <rect x="150" y="120" width="150" height="480" fill="url(#tw)" stroke="#1d2230" stroke-width="3"/>
+    <rect x="330" y="80" width="170" height="520" fill="url(#tw)" stroke="#1d2230" stroke-width="3"/>
+    <rect x="530" y="170" width="130" height="430" fill="url(#tw)" stroke="#1d2230" stroke-width="3"/>
+    <rect x="150" y="108" width="150" height="14" fill="#2f4a9a"/>
+    <rect x="330" y="68" width="170" height="14" fill="#b3243a"/>
+    <rect x="530" y="158" width="130" height="14" fill="#3e7f6b"/>
+  </g>
+  <g fill="#2f4a9a" opacity="0.75">
+    <g id="r1"><rect x="168" y="150" width="22" height="16"/><rect x="202" y="150" width="22" height="16"/><rect x="236" y="150" width="22" height="16"/><rect x="270" y="150" width="18" height="16"/></g>
+  </g>
+  <g fill="#1d2230" opacity="0.18">
+    <path d="M150 150h150M150 190h150M150 230h150M150 270h150M150 310h150M150 350h150M150 390h150M150 430h150M150 470h150M150 510h150M150 550h150" stroke="#1d2230" stroke-width="10"/>
+    <path d="M330 120h170M330 160h170M330 200h170M330 240h170M330 280h170M330 320h170M330 360h170M330 400h170M330 440h170M330 480h170M330 520h170M330 560h170" stroke="#1d2230" stroke-width="10"/>
+    <path d="M530 210h130M530 250h130M530 290h130M530 330h130M530 370h130M530 410h130M530 450h130M530 490h130M530 530h130M530 570h130" stroke="#1d2230" stroke-width="10"/>
+  </g>
+  <g fill="#f7e2a8">
+    <rect x="182" y="226" width="16" height="8"/><rect x="250" y="346" width="16" height="8"/><rect x="214" y="466" width="16" height="8"/>
+    <rect x="360" y="196" width="16" height="8"/><rect x="440" y="316" width="16" height="8"/><rect x="400" y="436" width="16" height="8"/><rect x="470" y="516" width="16" height="8"/>
+    <rect x="556" y="286" width="16" height="8"/><rect x="620" y="406" width="16" height="8"/>
+  </g>
+  <text x="415" y="112" text-anchor="middle" font-family="Hahmlet, Georgia, serif" font-size="22" font-weight="700" fill="#1d2230">101</text>
+  <rect x="0" y="560" width="800" height="40" fill="#3e7f6b"/>
+  <g fill="#2d5f50"><circle cx="60" cy="560" r="26"/><circle cx="120" cy="566" r="22"/><circle cx="700" cy="560" r="28"/><circle cx="760" cy="566" r="22"/></g>
+</svg>

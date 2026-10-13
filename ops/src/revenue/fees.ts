@@ -5,6 +5,8 @@ import type { Store } from "../engine/db.ts";
 import type { Task, TaskResult } from "../engine/scheduler.ts";
 import { sangjangAddress } from "../sangjang/tasks.ts";
 import { jangoeAbi, jangoeAddress } from "../jangoe.ts";
+import { propertyAbi, propertyAddress } from "../property.ts";
+import { stocksAbi, stocksAddresses } from "../stocks/catalog.ts";
 import { sweepPumpFees } from "../pump.ts";
 import { krwPlus } from "../engine/fx.ts";
 import { existsSync as exists, readFileSync as readFile } from "node:fs";
@@ -47,20 +49,22 @@ export interface Revenue {
   cheongyak: string;
   yut: string;
   jangoe: string;
+  property: string;
+  stocks: string;
   lastSweep: number;
 }
 
 export function revenue(store: Store): Revenue {
-  return { gye: "0", sangjang: "0", cheongyak: "0", yut: "0", jangoe: "0", lastSweep: 0, ...store.get<Partial<Revenue>>("revenue") };
+  return { gye: "0", sangjang: "0", cheongyak: "0", yut: "0", jangoe: "0", property: "0", stocks: "0", lastSweep: 0, ...store.get<Partial<Revenue>>("revenue") };
 }
 
-export const revenueTotal = (r: Revenue) => BigInt(r.gye) + BigInt(r.sangjang) + BigInt(r.cheongyak) + BigInt(r.yut) + BigInt(r.jangoe);
+export const revenueTotal = (r: Revenue) => BigInt(r.gye) + BigInt(r.sangjang) + BigInt(r.cheongyak) + BigInt(r.yut) + BigInt(r.jangoe) + BigInt(r.property) + BigInt(r.stocks);
 
 /** Test-won amounts, with their ETH and dollar equivalents at Upbit's live price. */
 export const krw = (raw: bigint) => krwPlus(Number(formatUnits(raw, 18)));
 
 /** Unswept fees still sitting in contracts right now. */
-export async function pendingFees(): Promise<{ gye: bigint; sangjang: bigint; cheongyak: bigint; yut: bigint; jangoe: bigint }> {
+export async function pendingFees(): Promise<{ gye: bigint; sangjang: bigint; cheongyak: bigint; yut: bigint; jangoe: bigint; property: bigint; stocks: bigint }> {
   let gye = 0n;
   const d = gyeDeployment();
   if (d) {
@@ -84,7 +88,11 @@ export async function pendingFees(): Promise<{ gye: bigint; sangjang: bigint; ch
   const v2 = lp && d ? await giwa.readContract({ address: lp.cheongyakV2, abi: cheongyakV2Abi, functionName: "feesAccrued", args: [d.tkrw] }) : 0n;
   const mk = jangoeAddress();
   const jangoe = mk && d ? await giwa.readContract({ address: mk, abi: jangoeAbi, functionName: "feesAccrued", args: [d.tkrw] }) : 0n;
-  return { gye, sangjang, cheongyak: cheongyak + v2, yut, jangoe };
+  const pr = propertyAddress();
+  const property = pr ? await giwa.readContract({ address: pr, abi: propertyAbi, functionName: "feesAccrued" }) : 0n;
+  const st = stocksAddresses();
+  const stocks = st ? await giwa.readContract({ address: st.stocks, abi: stocksAbi, functionName: "feesAccrued" }) : 0n;
+  return { gye, sangjang, cheongyak: cheongyak + v2, yut, jangoe, property, stocks };
 }
 
 /**
@@ -170,6 +178,28 @@ export function feeSweepTask(keeper: { address: Address; key: Hex }, store: Stor
         }
       }
 
+      let pt = BigInt(rev.property);
+      const pr = propertyAddress();
+      if (pr) {
+        const fee = await giwa.readContract({ address: pr, abi: propertyAbi, functionName: "feesAccrued" });
+        if (fee > 0n) {
+          const { hash } = await write({ key: keeper.key, address: pr, abi: propertyAbi, functionName: "sweepFees" });
+          pt += fee;
+          swept.push(`Property ${krw(fee)} ${explorerTx(hash)}`);
+        }
+      }
+
+      let sk = BigInt(rev.stocks);
+      const st = stocksAddresses();
+      if (st) {
+        const fee = await giwa.readContract({ address: st.stocks, abi: stocksAbi, functionName: "feesAccrued" });
+        if (fee > 0n) {
+          const { hash } = await write({ key: keeper.key, address: st.stocks, abi: stocksAbi, functionName: "sweepFees" });
+          sk += fee;
+          swept.push(`Stocks ${krw(fee)} ${explorerTx(hash)}`);
+        }
+      }
+
       // 장터 뻥튀기 fees are ETH; they are reported apart from the won totals.
       const pumpSwept = await sweepPumpFees(keeper);
       if (pumpSwept) swept.push(pumpSwept);
@@ -184,6 +214,8 @@ export function feeSweepTask(keeper: { address: Address; key: Hex }, store: Stor
         cheongyak: cy.toString(),
         yut: yt.toString(),
         jangoe: jg.toString(),
+        property: pt.toString(),
+        stocks: sk.toString(),
         lastSweep: swept.length ? Date.now() : rev.lastSweep,
       };
       store.set("revenue", next);
@@ -192,7 +224,9 @@ export function feeSweepTask(keeper: { address: Address; key: Hex }, store: Stor
 • Listings ${krw(sj)}
 • Offerings ${krw(cy)}
 • Yut ${krw(yt)}
-• Premarket ${krw(jg)}`;
+• Premarket ${krw(jg)}
+• Property ${krw(pt)}
+• Stocks ${krw(sk)}`;
       return swept.length ? { summary: `💰 swept ${swept.join(" · ")}\n${total}`, notify: "info" } : { summary: `nothing to sweep · ${total}` };
     },
   };

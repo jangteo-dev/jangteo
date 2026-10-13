@@ -36,7 +36,7 @@ function transport(urls: string[]) {
  * wraps a transport so rate-limited requests wait and try again (up to ~40 s) instead of failing
  * the whole task; every other error passes straight through.
  */
-function patient<T extends Transport>(inner: T): T {
+export function patient<T extends Transport>(inner: T): T {
   return ((opts: Parameters<T>[0]) => {
     const t = inner(opts);
     return {

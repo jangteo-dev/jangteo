@@ -1022,7 +1022,7 @@ export const swKo: typeof swEn = {
   fxWaiting: "지급 중…",
 };
 
-type PartKey = "swap" | "lp" | "bridge" | "cheongyak" | "jangoe" | "pump" | "insa" | "yut" | "gye" | "sangjang" | "daily" | "days" | "invite";
+type PartKey = "swap" | "lp" | "bridge" | "cheongyak" | "jangoe" | "property" | "stocks" | "pump" | "insa" | "yut" | "gye" | "sangjang" | "daily" | "days" | "invite";
 
 export const ptEn = {
   h1: "Jangteo Points",
@@ -1076,6 +1076,8 @@ export const ptEn = {
     bridge: "Bridge",
     cheongyak: "Offerings",
     jangoe: "Premarket",
+    property: "Property",
+    stocks: "Stocks",
     pump: "Ppeongtwigi",
     insa: "Insadong",
     yut: "Yut",
@@ -1091,6 +1093,8 @@ export const ptEn = {
     ["bridge", `1 P per 0.001 ETH bridged to GIWA, withdrawn or fast-exited to Ethereum, up to ${r.bridgeDailyCap} P a day`],
     ["cheongyak", `${r.cySubscribe} P for each offering you subscribe to, plus ${r.cyPerKrw * 1000} P per ₩1,000 deposited`],
     ["jangoe", `${r.jgPerKrw * 1000} P per ₩1,000 traded, for both sides. Sellers get ${r.jgDelivered} P per delivery and lose ${-r.jgDefaulted} P per missed one`],
+    ["property", `${(r.prPerKrw ?? 0.001) * 1000} P per ₩1,000 of property shares bought in a sale or on the market (the market seller earns the same), ${r.prRentClaim ?? 20} P for claiming rent, once a day`],
+    ["stocks", `${(r.stPerKrw ?? 0.001) * 1000} P per ₩1,000 of stocks bought or sold, up to ${r.stDailyCap ?? 500} P a day, plus ${(r.stLpPerKrwDay ?? 0.001) * 1000} P per ₩1,000 in the stocks vault, per day`],
     ["pump", `1 P per 0.001 ETH traded on a curve, up to ${r.pumpDailyCap} P a day; ${r.pumpLaunch ?? 20} P for launching a token (once a day) and ${r.pumpGraduated} P to the creator when a launch graduates`],
     ["insa", `${r.insaMint} P per NFT minted from an Insadong drop (up to ${r.insaMintCap} P a day), 1 P per 0.001 ETH of NFT sales for buyer and seller, up to ${r.insaDailyCap} P a day`],
     ["daily", `One roulette spin a day (10–500 P, +${r.streak7} P every 7th day in a row), +${r.dailyQuest} P each for a swap, a Ppeongtwigi trade, a yut game and an Insadong mint or trade, +${r.dailyBridge} P for a bridge move, +${r.dailyAll} P for any four`],
@@ -1175,6 +1179,8 @@ export const ptKo: typeof ptEn = {
     bridge: "브릿지",
     cheongyak: "청약",
     jangoe: "장외",
+    property: "부동산",
+    stocks: "주식",
     pump: "뻥튀기",
     insa: "인사동",
     yut: "윷놀이",
@@ -1190,6 +1196,8 @@ export const ptKo: typeof ptEn = {
     ["bridge", `GIWA로 브릿지, 이더리움으로 출금이나 빠른 출금 0.001 ETH당 1P, 하루 최대 ${r.bridgeDailyCap}P`],
     ["cheongyak", `청약 참여마다 ${r.cySubscribe}P, 청약금 ₩1,000당 ${r.cyPerKrw * 1000}P`],
     ["jangoe", `거래대금 ₩1,000당 ${r.jgPerKrw * 1000}P (매수·매도 모두). 판매자는 인도마다 ${r.jgDelivered}P, 미인도마다 ${-r.jgDefaulted}P 차감`],
+    ["property", `부동산 지분을 모집이나 마켓에서 살 때 ₩1,000당 ${(r.prPerKrw ?? 0.001) * 1000}P (마켓 판매자도 같은 만큼), 임대료를 받으면 ${r.prRentClaim ?? 20}P (하루 한 번)`],
+    ["stocks", `주식을 사거나 팔 때 ₩1,000당 ${(r.stPerKrw ?? 0.001) * 1000}P (하루 최대 ${r.stDailyCap ?? 500}P), 주식 금고에 맡긴 ₩1,000당 하루 ${(r.stLpPerKrwDay ?? 0.001) * 1000}P`],
     ["pump", `커브 거래 0.001 ETH당 1P, 하루 최대 ${r.pumpDailyCap}P. 토큰 출시 ${r.pumpLaunch ?? 20}P(하루 한 번), 졸업한 토큰의 출시자에게 ${r.pumpGraduated}P`],
     ["insa", `인사동 드롭에서 NFT 하나 민팅할 때마다 ${r.insaMint}P(하루 최대 ${r.insaMintCap}P), NFT 거래 0.001 ETH마다 사는 쪽과 파는 쪽 모두 1P(하루 최대 ${r.insaDailyCap}P)`],
     ["daily", `하루 한 번 룰렛(10~500P, 7일 연속마다 +${r.streak7}P), 스왑·뻥튀기 거래·윷놀이·인사동 민팅이나 거래 각 +${r.dailyQuest}P, 브릿지 +${r.dailyBridge}P, 아무거나 넷 하면 +${r.dailyAll}P`],
@@ -2358,7 +2366,7 @@ export const stEn = {
   metric: { tx: "Transactions", users: "Wallets", eth: "ETH" } as Record<string, string>,
   byStall: "By stall",
   stall: "Stall",
-  stalls: { swap: "Swap and aggregator", pump: "Ppeongtwigi", insa: "Insadong NFTs", bridge: "Bridge", cheongyak: "Offerings", jangoe: "Premarket", sangjang: "Listings", gye: "Gye circles", yut: "Yut", daily: "Daily roulette", invite: "Invites" } as Record<string, string>,
+  stalls: { swap: "Swap and aggregator", pump: "Ppeongtwigi", insa: "Insadong NFTs", bridge: "Bridge", cheongyak: "Offerings", jangoe: "Premarket", property: "Property", stocks: "Stocks", sangjang: "Listings", gye: "Gye circles", yut: "Yut", daily: "Daily roulette", invite: "Invites" } as Record<string, string>,
   countsH: "Counts",
   counts: { launches: "Tokens launched", graduated: "Graduated to Swap", nftMinted: "NFTs minted", nftSold: "NFTs sold", games: "Yut games finished", circles: "Gye circles", offerings: "Offerings subscribed" } as Record<string, string>,
   foot: ((t: string) => `Updated ${t}. Test ETH and test won have no value.`) as F<[string]>,
@@ -2381,7 +2389,7 @@ export const stKo: typeof stEn = {
   metric: { tx: "트랜잭션", users: "지갑", eth: "ETH" },
   byStall: "장터별",
   stall: "장터",
-  stalls: { swap: "스왑·애그리게이터", pump: "뻥튀기", insa: "인사동 NFT", bridge: "브릿지", cheongyak: "청약", jangoe: "장외", sangjang: "상장 예측", gye: "계모임", yut: "윷놀이", daily: "오늘의 룰렛", invite: "친구 초대" },
+  stalls: { swap: "스왑·애그리게이터", pump: "뻥튀기", insa: "인사동 NFT", bridge: "브릿지", cheongyak: "청약", jangoe: "장외", property: "부동산", stocks: "주식", sangjang: "상장 예측", gye: "계모임", yut: "윷놀이", daily: "오늘의 룰렛", invite: "친구 초대" },
   countsH: "누적",
   counts: { launches: "출시된 토큰", graduated: "스왑으로 졸업", nftMinted: "민팅된 NFT", nftSold: "판매된 NFT", games: "끝난 윷놀이", circles: "계모임", offerings: "청약" },
   foot: (t) => `${t} 기준. 테스트 ETH와 테스트 원화는 실제 가치가 없어요.`,

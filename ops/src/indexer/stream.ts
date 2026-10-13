@@ -197,14 +197,7 @@ export class Stream {
       const live = group.filter((s) => s.created <= b && s.backfilled < b);
       for (let i = 0; i < live.length; i += ADDRS_PER_QUERY) queries.push({ a, b, addrs: live.slice(i, i + ADDRS_PER_QUERY).map((s) => s.address as Address) });
     }
-    const parts = await Promise.all(
-      queries.map((q) =>
-        callAny(
-          (c) => c.getLogs({ address: q.addrs, events: [EV.sync, EV.v2Swap, EV.v3Swap, EV.trade], fromBlock: BigInt(q.a), toBlock: BigInt(q.b) }),
-          `logs ${q.a}-${q.b}`,
-        ),
-      ),
-    );
+    const parts = await Promise.all(queries.map((q) => this.logs(q.addrs, q.a, q.b)));
     // Store in chain order, so a pool's latest state is the one it ends the range with.
     const logs = parts.flat().sort((x, y) => Number(x.blockNumber! - y.blockNumber!) || x.logIndex! - y.logIndex!);
     const kinds = new Map(group.map((s) => [s.address, s.kind]));
@@ -216,6 +209,20 @@ export class Stream {
       }
     });
     return target - to;
+  }
+
+  /** Reads one range; a busy stretch whose answer is too big for one response is read in halves. */
+  private async logs(addrs: Address[], a: number, b: number): Promise<Log[]> {
+    try {
+      return (await callAny(
+        (c) => c.getLogs({ address: addrs, events: [EV.sync, EV.v2Swap, EV.v3Swap, EV.trade], fromBlock: BigInt(a), toBlock: BigInt(b) }),
+        `logs ${a}-${b}`,
+      )) as Log[];
+    } catch (err) {
+      if (a >= b || !/size limit/i.test(String((err as Error)?.message ?? err))) throw err;
+      const m = Math.floor((a + b) / 2);
+      return [...(await this.logs(addrs, a, m)), ...(await this.logs(addrs, m + 1, b))];
+    }
   }
 
   private store(logs: Log[], kinds: Map<string, string>) {

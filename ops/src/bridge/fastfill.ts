@@ -1,6 +1,6 @@
 import { createPublicClient, fallback, formatEther, http, parseAbi, parseAbiItem, type Address, type Hex } from "viem";
 import { giwaSepolia } from "viem/chains";
-import { l1, write } from "../chain.ts";
+import { l1, patient, write } from "../chain.ts";
 import { config } from "../config.ts";
 import { RESCAN } from "../engine/rescan.ts";
 import type { Store } from "../engine/db.ts";
@@ -29,7 +29,7 @@ const vaultAbi = parseAbi([
 ]);
 
 export function fastFillTask(keeper: { address: Address; key: Hex }, store: Store): Task {
-  const l2 = createPublicClient({ chain: giwaSepolia, transport: fallback(config.rpc.giwa.map((u) => http(u, { timeout: 15_000 }))) });
+  const l2 = createPublicClient({ chain: giwaSepolia, transport: patient(fallback(config.rpc.giwa.map((u) => http(u, { timeout: 15_000 })))) });
   return {
     id: "bridge:fastfill",
     title: "Fast withdrawals (fill on Ethereum)",

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="A hanok house in Jeonju (illustration)">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd3e0"/><stop offset="1" stop-color="#eef1ea"/></linearGradient></defs>
+  <rect width="800" height="600" fill="url(#sky)"/>
+  <path d="M0 330 Q200 250 400 300 T800 280 L800 600 L0 600Z" fill="#9fb8a6"/>
+  <path d="M0 380 Q260 320 520 370 T800 350 L800 600 L0 600Z" fill="#7fa08a"/>
+  <rect x="0" y="470" width="800" height="130" fill="#d9c9a6"/>
+  <g>
+    <path d="M120 300 Q400 230 680 300 L720 290 Q700 330 660 330 L140 330 Q100 330 80 290Z" fill="#3a4152" stroke="#1d2230" stroke-width="3"/>
+    <path d="M140 330 L660 330 L640 350 L160 350Z" fill="#555c6e"/>
+    <g stroke="#2a3040" stroke-width="2" opacity="0.6"><path d="M180 300v30M220 292v38M260 286v44M300 282v48M340 279v51M380 278v52M420 278v52M460 279v51M500 282v48M540 286v44M580 292v38M620 300v30"/></g>
+    <rect x="170" y="350" width="460" height="110" fill="#f3e8cf" stroke="#1d2230" stroke-width="3"/>
+    <g fill="#8a5a3a"><rect x="170" y="350" width="14" height="110"/><rect x="616" y="350" width="14" height="110"/><rect x="320" y="350" width="10" height="110"/><rect x="470" y="350" width="10" height="110"/></g>
+    <g fill="#fbf6ea" stroke="#8a5a3a" stroke-width="3">
+      <rect x="200" y="370" width="100" height="70"/><rect x="345" y="370" width="110" height="70"/><rect x="495" y="370" width="100" height="70"/>
+    </g>
+    <g stroke="#8a5a3a" stroke-width="1.5" opacity="0.7">
+      <path d="M200 393h100M200 416h100M233 370v70M266 370v70M345 393h110M345 416h110M382 370v70M418 370v70M495 393h100M495 416h100M528 370v70M561 370v70"/>
+    </g>
+    <rect x="150" y="460" width="500" height="18" fill="#b9a27e" stroke="#1d2230" stroke-width="2"/>
+  </g>
+  <g fill="#b3243a"><circle cx="90" cy="430" r="10"/><circle cx="110" cy="420" r="8"/><circle cx="702" cy="428" r="10"/></g>
+  <path d="M60 470 Q80 400 120 380" stroke="#5a3e2a" stroke-width="8" fill="none"/>
+  <g fill="#3e7f6b"><circle cx="120" cy="372" r="34"/><circle cx="84" cy="390" r="26"/><circle cx="150" cy="392" r="24"/></g>
+  <circle cx="660" cy="120" r="40" fill="#d9a021" opacity="0.85"/>
+</svg>

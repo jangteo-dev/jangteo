@@ -8,8 +8,8 @@ import { DailyCard, type Today } from "../components/DailyCard";
 import { InviteCard } from "../components/InviteCard";
 import { VerifyNow } from "../components/VerifyNow";
 
-type Part = "swap" | "lp" | "bridge" | "cheongyak" | "jangoe" | "pump" | "insa" | "yut" | "gye" | "sangjang" | "daily" | "days" | "invite";
-const PARTS: Part[] = ["swap", "lp", "bridge", "cheongyak", "jangoe", "pump", "insa", "yut", "gye", "sangjang", "daily", "days", "invite"];
+type Part = "swap" | "lp" | "bridge" | "cheongyak" | "jangoe" | "property" | "stocks" | "pump" | "insa" | "yut" | "gye" | "sangjang" | "daily" | "days" | "invite";
+const PARTS: Part[] = ["swap", "lp", "bridge", "cheongyak", "jangoe", "property", "stocks", "pump", "insa", "yut", "gye", "sangjang", "daily", "days", "invite"];
 
 interface Entry {
   address: Address;

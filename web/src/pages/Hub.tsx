@@ -15,6 +15,7 @@ import { SeasonBand } from "../components/SeasonBand";
 import { listAllLaunches, readCurve } from "../lib/pump";
 import { won } from "../lib/gye";
 import { fmtUnits } from "../lib/jangoe";
+import { StockHubBoard } from "../components/StockHubBoard";
 import { fmtComp, offeringStatus } from "./CyList";
 
 const STORY: Seat[] = [
@@ -215,6 +216,28 @@ export function Hub() {
           <h2>{t.ins.hubTitle}</h2>
           <p>{t.ins.hubBody}</p>
           <span className="stall__go">{t.ins.hubGo}</span>
+        </a>
+
+        <a className="stall" href="#/stocks">
+          <div className="stall__visual stall__visual--book">
+            <StockHubBoard />
+          </div>
+          <p className="stall__ko" lang="ko">주식</p>
+          <h2>{t.sk.hubTitle}</h2>
+          <p>{t.sk.hubBody}</p>
+          <span className="stall__go">{t.sk.hubGo}</span>
+        </a>
+
+        <a className="stall" href="#/property">
+          <div className="stall__visual stall__visual--book">
+            <span className="frame stall__frame">
+              <img src={`${import.meta.env.BASE_URL}property/jeonju.svg`} alt="" width={220} height={165} loading="lazy" />
+            </span>
+          </div>
+          <p className="stall__ko" lang="ko">부동산</p>
+          <h2>{t.pr.hubTitle}</h2>
+          <p>{t.pr.hubBody}</p>
+          <span className="stall__go">{t.pr.hubGo}</span>
         </a>
 
         <a className="stall" href={jgTop ? `#/jangoe/${jgTop.m.id}` : "#/jangoe"}>

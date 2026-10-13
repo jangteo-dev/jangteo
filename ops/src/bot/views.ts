@@ -8,6 +8,8 @@ import type { Scheduler } from "../engine/scheduler.ts";
 import { readMarkets, sangjangAddress } from "../sangjang/tasks.ts";
 import { kst } from "../engine/time.ts";
 import { jangoeAbi, jangoeAddress } from "../jangoe.ts";
+import { propertyAbi, propertyAddress } from "../property.ts";
+import { stocksAbi, stocksAddresses } from "../stocks/catalog.ts";
 import type { SwapStats } from "../swap/stats.ts";
 import { pumpSummary } from "../pump.ts";
 import { fx, krwPlus } from "../engine/fx.ts";
@@ -150,12 +152,27 @@ export async function home(sched: Scheduler, store: Store): Promise<View> {
     lp ? within(giwa.readContract({ address: lp.cheongyakV2, abi: cheongyakV2Abi, functionName: "offeringCount" }), 4000, 0n) : 0n,
   ]);
   const offerings = offeringsV1 + offeringsV2;
-  const pending = await within(pendingFees(), 5000, { gye: 0n, sangjang: 0n, cheongyak: 0n, yut: 0n, jangoe: 0n });
+  const pending = await within(pendingFees(), 5000, { gye: 0n, sangjang: 0n, cheongyak: 0n, yut: 0n, jangoe: 0n, property: 0n, stocks: 0n });
   const jg = jangoeAddress();
   const [jMarkets, jTrades] = jg
     ? await Promise.all([
         within(giwa.readContract({ address: jg, abi: jangoeAbi, functionName: "marketCount" }), 4000, 0n),
         within(giwa.readContract({ address: jg, abi: jangoeAbi, functionName: "tradeCount" }), 4000, 0n),
+      ])
+    : [0n, 0n];
+  const pr = propertyAddress();
+  const [props, listings] = pr
+    ? await Promise.all([
+        within(giwa.readContract({ address: pr, abi: propertyAbi, functionName: "count" }), 4000, 0n),
+        within(giwa.readContract({ address: pr, abi: propertyAbi, functionName: "listingCount" }), 4000, 0n),
+      ])
+    : [0n, 0n];
+
+  const st = stocksAddresses();
+  const [stNav, stLiab] = st
+    ? await Promise.all([
+        within(giwa.readContract({ address: st.stocks, abi: stocksAbi, functionName: "nav" }), 4000, 0n),
+        within(giwa.readContract({ address: st.stocks, abi: stocksAbi, functionName: "liability" }), 4000, 0n),
       ])
     : [0n, 0n];
 
@@ -179,8 +196,8 @@ export async function home(sched: Scheduler, store: Store): Promise<View> {
     "",
     "<b>💰 Revenue</b> (fees to treasury)",
     `Collected ${krw(revenueTotal(rev))}`,
-    `• Gye ${krw(BigInt(rev.gye))}\n• Listings ${krw(BigInt(rev.sangjang))}\n• Offerings ${krw(BigInt(rev.cheongyak))}\n• Yut ${krw(BigInt(rev.yut))}\n• Premarket ${krw(BigInt(rev.jangoe))}`,
-    `Pending in contracts ${krw(pending.gye + pending.sangjang + pending.cheongyak + pending.yut + pending.jangoe)}${rev.lastSweep ? ` · last sweep ${kst(rev.lastSweep)}` : ""}`,
+    `• Gye ${krw(BigInt(rev.gye))}\n• Listings ${krw(BigInt(rev.sangjang))}\n• Offerings ${krw(BigInt(rev.cheongyak))}\n• Yut ${krw(BigInt(rev.yut))}\n• Premarket ${krw(BigInt(rev.jangoe))}\n• Property ${krw(BigInt(rev.property))}\n• Stocks ${krw(BigInt(rev.stocks))}`,
+    `Pending in contracts ${krw(pending.gye + pending.sangjang + pending.cheongyak + pending.yut + pending.jangoe + pending.property + pending.stocks)}${rev.lastSweep ? ` · last sweep ${kst(rev.lastSweep)}` : ""}`,
     "",
     "<b>🧵 Gye</b>",
     d ? `Live · factory <code>${short(d.factory)}</code> · https://jangteo.org` : "Not deployed yet (auto-deploys when the deployer has gas)",
@@ -191,6 +208,8 @@ export async function home(sched: Scheduler, store: Store): Promise<View> {
     await pumpLine(),
     insaLine(store),
     `<b>🏷 Offerings</b> ${offerings} · <b>🎲 Yut</b> ${games} games · <b>🤝 Premarket</b> ${jMarkets} markets, ${jTrades} trades`,
+    `<b>🏠 Property</b> ${pr ? `${props} properties · ${listings} share listings` : "not deployed"}`,
+    `<b>📈 Stocks</b> ${st ? `vault ${krw(stNav)} · held by traders ${krw(stLiab)}` : "not deployed"}`,
     ...(h.failing.length ? ["", "<b>⚠️ Failing</b>", ...h.failing.map((t) => `<code>${t.task.id}</code> ${esc(t.state.last_result.slice(0, 80))}`)] : []),
   ].filter((l) => l !== undefined);
 

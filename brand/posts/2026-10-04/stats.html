@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>
+h1 { font-size: 60px; line-height: 1.1; margin-top: 28px; }
+h1 small { display:block; font-size: 30px; color: var(--ink-2); font-weight:400; margin-top: 10px; font-family: "Gowun Dodum", sans-serif; }
+.body { display:grid; grid-template-columns: 1fr 640px; gap: 48px; margin-top: 28px; }
+.kpis { display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-content:start; }
+.kpi { background: var(--paper-hi); border: 1px solid var(--seam); border-radius: 6px; padding: 16px 20px; }
+.kpi b { display:block; font-family:"Hahmlet",serif; font-weight:500; font-size: 50px; line-height:1; font-variant-numeric: tabular-nums; }
+.kpi span { display:block; margin-top: 8px; font-size: 20px; color: var(--ink); }
+.kpi small { display:block; font-size: 17px; color: var(--ink-3); margin-top: 2px; }
+.kpi.hero { grid-column: span 3; display:flex; align-items: baseline; gap: 22px; }
+.kpi.hero b { font-size: 96px; color: var(--jjok); }
+.kpi.hero span { font-size: 30px; margin:0; }
+.chart { background: var(--paper-hi); border: 1px solid var(--seam); border-radius: 6px; padding: 22px 24px 14px; display:flex; flex-direction:column; }
+.chart h2 { font-size: 24px; font-weight: 400; }
+.chart h2 small { color: var(--ink-3); font-size: 18px; margin-left: 8px; }
+.bars { flex:1; display:flex; align-items:flex-end; gap: 10px; margin-top: 18px; border-bottom: 1px solid var(--seam); height: 330px; }
+.col { flex:1; height:100%; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; position:relative; }
+.col i { width: 100%; background: var(--jjok); border-radius: 4px 4px 0 0; min-height: 3px; }
+.col em { font-style:normal; font-size: 22px; color: var(--ink); margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.col span { position:absolute; bottom:-30px; font-size: 16px; color: var(--ink-3); }
+.note { margin-top: 40px; font-size: 16px; color: var(--ink-3); }
+</style></head><body><div class="card">
+<div class="top"><img src="logo.svg" alt=""><span class="tag"><i></i>Testnet · Season 1</span></div>
+<h1>Season 1 on GIWA testnet, so far<small>Thank you to everyone testing Jangteo</small></h1>
+<div class="body">
+ <div class="kpis">
+  <div class="kpi hero"><b>38</b><span>tester wallets<br><small>17 Dojang-verified</small></span></div>
+  <div class="kpi"><b>416</b><span>transactions</span><small>on-chain</small></div>
+  <div class="kpi"><b>11</b><span>tokens launched</span><small>on Ppeongtwigi</small></div>
+  <div class="kpi"><b>41</b><span>NFTs minted</span><small>on Insadong</small></div>
+  <div class="kpi"><b>14.1</b><span>ETH volume</span><small>testnet ETH</small></div>
+  <div class="kpi"><b>19</b><span>yut games</span><small>played on-chain</small></div>
+  <div class="kpi"><b>3</b><span>token offerings</span><small>IPO-style</small></div>
+ </div>
+ <div class="chart"><h2>Wallets active per day</h2><div class="bars"><div class="col"><i style="height:6.9%"></i><span>9/23</span></div><div class="col"><i style="height:20.7%"></i><span>9/24</span></div><div class="col"><i style="height:6.9%"></i><span>9/25</span></div><div class="col"><i style="height:13.8%"></i><span>9/26</span></div><div class="col"><i style="height:27.6%"></i><span>9/27</span></div><div class="col"><i style="height:34.5%"></i><span>9/28</span></div><div class="col"><i style="height:41.4%"></i><span>9/29</span></div><div class="col"><em>29</em><i style="height:100.0%"></i><span>9/30</span></div><div class="col"><em>24</em><i style="height:82.8%"></i><span>10/1</span></div></div><div style="height:30px"></div></div>
+</div>
+<div class="foot"><span class="note" style="margin:0">Sep 23 – Oct 1 (KST) · from GIWA Sepolia on-chain data · team and QA wallets excluded from testers</span><b>jangteo.org/#/stats</b></div>
+</div></body></html>

@@ -13,6 +13,54 @@ const bridgeTab = async (p: Page, dir: 0 | 1) => {
 };
 
 export const flows: Record<string, (p: Page) => Promise<string>> = {
+  async stocksBuySell(p) {
+    // 장터 주식: buy ₩10,000 of Samsung from the ticket, then sell everything with Max.
+    await go(p, "#/stocks/005930");
+    await p.waitForSelector(".skhead__px");
+    await p.locator(".panel input[inputmode=numeric]").first().fill("10000");
+    await p.getByRole("button", { name: /^Buy for ₩10,000/ }).click();
+    const bought = await toast(p);
+    await p.waitForTimeout(4000);
+    await p.locator("label", { has: p.locator("input[name=skside]") }).nth(1).click();
+    await p.getByRole("button", { name: "Max" }).click();
+    await p.getByRole("button", { name: /^Sell / }).click();
+    const sold = await toast(p);
+    return `${bought} → ${sold}`;
+  },
+  async stocksDeposit(p) {
+    await go(p, "#/stocks/pool");
+    await p.locator(".panel input[inputmode=numeric]").first().fill("50000");
+    await p.getByRole("button", { name: "Add to the vault" }).click();
+    const done = await toast(p);
+    await p.waitForTimeout(4000);
+    return `${done} · ${(await p.locator(".position p").first().textContent())?.trim()}`;
+  },
+  async propertyBuy(p) {
+    // 장터 부동산: open a curated property from the list and buy 10 shares.
+    await go(p, "#/property");
+    await p.locator(".propcard").first().click();
+    await p.waitForSelector(".propfacts");
+    await p.locator(".panel form input[inputmode=numeric]").first().fill("10");
+    await p.getByRole("button", { name: /^Buy 10 for/ }).click();
+    const done = await toast(p);
+    await p.waitForTimeout(4000);
+    return `${done} · ${(await p.locator(".position p").first().textContent())?.trim()}`;
+  },
+  async propertyListAndCancel(p) {
+    // A verified user lists a property through the form, then cancels the sale (no buyers, nothing to refund).
+    await go(p, "#/property/new");
+    await p.getByLabel("Name").fill("QA listing (cancelled)");
+    await p.getByLabel("Location").fill("QA");
+    await p.getByRole("button", { name: /^List the property/ }).click();
+    const created = await toast(p);
+    await p.waitForTimeout(3000);
+    const ids = await p.locator(".propcard").evaluateAll((as: HTMLAnchorElement[]) => as.map((a) => Number(a.getAttribute("href")!.split("/").pop())));
+    const id = Math.max(...ids);
+    await go(p, `#/property/${id}`);
+    await p.getByRole("button", { name: "Cancel the sale and refund everyone" }).click();
+    const cancelled = await toast(p);
+    return `${created} → #${id} ${cancelled}`;
+  },
   async verifyPoints(p) {
     // An unverified wallet verifies straight from the Points page, then can spin.
     await go(p, "#/points");

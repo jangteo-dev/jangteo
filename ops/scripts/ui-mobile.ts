@@ -5,7 +5,7 @@ const b = await chromium.launch();
 const ctx = await b.newContext({ ...devices["iPhone 13"] });
 const p = await ctx.newPage();
 const out: string[] = [];
-for (const r of ["#/", "#/points", "#/swap", "#/ppeongtwigi", "#/insa", "#/market", "#/me", "#/yut", "#/gye", "#/cheongyak", "#/jangoe", "#/listings", "#/faq", "#/swap?tab=bridge"]) {
+for (const r of ["#/", "#/points", "#/swap", "#/ppeongtwigi", "#/insa", "#/market", "#/me", "#/yut", "#/gye", "#/cheongyak", "#/jangoe", "#/property", "#/stocks", "#/stocks/005930", "#/stocks/NVDA", "#/stocks/pool", "#/property/0", "#/property/new", "#/listings", "#/faq", "#/swap?tab=bridge"]) {
   await p.goto("https://jangteo.org/" + r, { waitUntil: "domcontentloaded" });
   await p.waitForTimeout(3500);
   const w = await p.evaluate(() => {
